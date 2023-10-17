@@ -1,3 +1,4 @@
 // show all the databases
 
+mongo
 show dbs
