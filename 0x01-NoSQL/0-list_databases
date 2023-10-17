@@ -1,4 +1,3 @@
 // show all the databases
 
-mongo
-show dbs
+mongo --eval "db.adminCommand({ listDatabases: 1 }).databases.forEach(function(d) { print(d.name) });"
