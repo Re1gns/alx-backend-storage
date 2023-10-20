@@ -20,12 +20,17 @@ def count_url_access(method):
             return cached_data.decode("utf-8")
 
         count_key = "count:" + url
-        html = method(url)
+        try:
+            res = method(url)
+            html = res.text
+            store.incr(count_key)
+            store.set(cached_key, html)
+            store.expire(cached_key, 10)
+            return html
+        except requests.exceptions.RequestException as e:
+            # Handle the exception (e.g., log or re-raise) here
+            raise e
 
-        store.incr(count_key)
-        store.set(cached_key, html)
-        store.expire(cached_key, 10)
-        return html
     return wrapper
 
 
@@ -33,4 +38,5 @@ def count_url_access(method):
 def get_page(url: str) -> str:
     """ Returns HTML content of a url """
     res = requests.get(url)
-    return res.text
+    res.raise_for_status()  # Raise an exception for non-2xx responses
+    return res
