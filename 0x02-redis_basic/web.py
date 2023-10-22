@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 """
 Web cache and tracker
 """
@@ -25,7 +24,7 @@ def count_url_access(method):
         html = method(url)
 
         store.incr(count_key)  # Increment the count
-        store.set(cached_key, html, ex=10)  # Cache for 10 seconds
+        store.setex(cached_key, 10, html)  # Cache for 10 seconds
         return html
 
     return wrapper
