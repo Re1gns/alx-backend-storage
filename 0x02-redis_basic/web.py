@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
+
 """
 web cache and tracker
 """
+
 import requests
 import redis
 from functools import wraps
 
 store = redis.Redis()
 
+
 def count_url_access(method):
-    """ Decorator counting how many times a URL is accessed """
+    """ Decorator counting how many times
+    a URL is accessed """
     @wraps(method)
     def wrapper(url):
         cached_key = "cached:" + url
@@ -26,6 +30,7 @@ def count_url_access(method):
         return html
 
     return wrapper
+
 
 @count_url_access
 def get_page(url: str) -> str:
@@ -47,9 +52,10 @@ def remove_cached_data(url: str):
     store.delete(cached_key)
 
 # Example usage:
-url = "http://google.com"
-content = get_page(url)
-access_count = get_url_access_count(url)
-print(f"Content for {url}: {content}")
-print(f"Access count for {url}: {access_count}")
-remove_cached_data(url)  # Remove cached data
+if __name__ == "__main__":
+    url = "http://google.com"
+    content = get_page(url)
+    access_count = get_url_access_count(url)
+    print(f"Content for {url}: {content}")
+    print(f"Access count for {url}: {access_count}")
+    remove_cached_data(url)  # Remove cached data
